@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="landing.css" />
+    <style>
+	.footer {
+		position: absolute;
+		font-family: Verdana;
+		background-color: #000;
+		color: white;
+		bottom: 0;
+		width: 99.1vw;
+	}
+    </style>	
+    <title>My Blog</title>
+</head>
+<body>	
+	<script>
+		document.addEventListener("DOMContentLoaded", fetchAttempts());
+		function fetchAttempts() {
+			const token = localStorage.getItem("token");
+			console.log(token);
+			fetch("http://localhost:8081/attempts", {
+  				method: "GET",
+  				headers: {
+    					"Content-Type": "application/json",
+					"Authorization" : `Bearer ${token}`
+  				},
+			}).then(response => response.json()).then(data => {
+				const succ = document.getElementById("succ");
+				const fail = document.getElementById("fail");
+				succ.innerHTML += data["success"];
+				fail.innerHTML += data["failure"];
+			});
+		}
+	</script>
+	<div class="topnav">
+ 		<a class="active">My Blog</a>
+	</div>
+	<h1><div id="succ"> Success attempts: </div></h1>
+	<h1><div id="fail"> Failure attempts: </div></h1>
+	<div class="footer">
+		<center>
+			<h4>© Copyrights reserved.</h4>
+		</center>
+	</div>
+</body>
+</html>

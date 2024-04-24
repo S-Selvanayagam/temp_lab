@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+	button {
+		width: 2.5rem;
+		height: 2.5rem;
+	}
+    </style>	
+    <title>Calculator</title>
+</head>
+<body>
+	<input name="val" id="inp" value="">
+	<div id="nums" style="display: none"></div>
+	<table>
+		<tr>
+			<td><button onclick="handleWrite('7')">7</button></td>
+			<td><button onclick="handleWrite('8')">8</button></td>
+			<td><button onclick="handleWrite('9')">9</button></td>
+			<td><button onclick="handleWrite('/')">/</button></td>
+		</tr>
+		<tr>
+			<td><button onclick="handleWrite('4')">4</button></td>
+			<td><button onclick="handleWrite('5')">5</button></td>
+			<td><button onclick="handleWrite('6')">6</button></td>
+			<td><button onclick="handleWrite('*')">*</button></td>
+		</tr>		
+		<tr>
+			<td><button onclick="handleWrite('1')">1</button></td>
+			<td><button onclick="handleWrite('2')">2</button></td>
+			<td><button onclick="handleWrite('3')">3</button></td>
+			<td><button onclick="handleWrite('-')">-</button></td>
+		</tr>		
+		<tr>
+			<td><button onclick="handleDelete()">AC</button></td>
+			<td><button onclick="handleWrite('0')">0</button></td>
+			<td><button onclick="handleBack()">DE</button></td>
+			<td><button onclick="handleWrite('+')">+</button></td>
+			<td><button onclick="handleSubmit()">=</button></td>
+		</tr>
+	</table>
+	<script>
+		const numToWord = {'0': "zero", '1' : "one", '2': "two", '3': "three", '4': "four", '5': "five", 
+					'6': "six", '7': "seven", '8': "eight", '9': "nine", '+': 'plus', 
+					'-': 'minus', '*': 'mul', '/': 'div', '.' : '.', ' ': ''} 
+		
+		function handleWrite(text) {
+			const elem = document.getElementById("nums");
+			elem.innerHTML += text;
+			
+			const dispElem = document.getElementById("inp")
+			dispElem.value += numToWord[text] + ' ';
+		}
+		function handleDelete() {
+			const elem = document.getElementById("nums");
+			elem.innerHTML = '';
+			
+			const dispElem = document.getElementById("inp")
+			dispElem.value = '';
+		}
+		function handleBack() {
+			const elem = document.getElementById("nums");
+			const newVal = elem.innerHTML.slice(0, elem.innerHTML.length-1);
+			elem.innerHTML = newVal;
+
+			const dispElem = document.getElementById("inp");
+			dispElem.value = dispElem.value.split(' ').slice(0, -1).join(' ');
+		}
+		function handleSubmit() {
+			const elem = document.getElementById("nums");
+			try {
+				const result = eval(elem.innerHTML);
+				elem.innerHTML = result;
+				const dispElem = document.getElementById("inp");
+				const textRes = result.toString().split('').map((item)=>(numToWord[item])).join(' ');
+				dispElem.value = textRes;
+			} catch {
+				alert('Invalid Input!');
+			}
+		}
+	</script>
+</body>
+</html>

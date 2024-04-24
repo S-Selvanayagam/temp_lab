@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="landing.css" />
+    <style>
+	.footer {
+		position: absolute;
+		font-family: Verdana;
+		background-color: #000;
+		color: white;
+		bottom: 0;
+		width: 99.1vw;
+	}
+    </style>	
+    <title>My Uploads</title>
+</head>
+<body>	
+	<script>
+		document.addEventListener("DOMContentLoaded", fetchFiles());
+		function fetchFiles() {
+			const token = localStorage.getItem("token");
+			console.log(token);
+			fetch("http://localhost:8081/public_files", {
+  				method: "GET",
+  				headers: {
+    					"Content-Type": "application/json",
+					"Authorization" : `Bearer ${token}`
+  				},
+			}).then(response => response.json()).then(data => {
+				const public = document.getElementById("public");
+				data.forEach(element => {
+					const node = document.createElement("a");
+					node.setAttribute('href', 'http://localhost:8081/download_public_file/'+element);
+					node.innerText = element;
+					const liItem = document.createElement("li")
+					liItem.appendChild(node)
+					public.appendChild(liItem);
+				})
+			});
+
+			fetch("http://localhost:8081/private_files", {
+  				method: "GET",
+  				headers: {
+    					"Content-Type": "application/json",
+					"Authorization" : `Bearer ${token}`
+  				},
+			}).then(response => response.json()).then(data => {
+				const private = document.getElementById("private");
+				data.forEach(element => {
+					const liItem = document.createElement("li");
+					var text = document.createElement("button");
+					text.innerHTML = element;
+					text.addEventListener("click", function() {fetchPrivateFile(text.innerHTML);});
+					liItem.appendChild(text);
+					private.appendChild(liItem);
+				})
+			});
+
+			function fetchPrivateFile(file) {
+				fetch("http://localhost:8081/download_private_file/"+file, {
+  					method: "GET",
+  					headers: {
+    						"Content-Type": "application/json",
+						"Authorization" : `Bearer ${token}`
+  				},
+				}).then( res => res.blob() )
+  				.then( blob => {
+    					var url = window.URL.createObjectURL(blob);
+   					var a = document.createElement('a');
+           				a.href = url;
+           				a.download = file;
+            				document.body.appendChild(a); // we need to append the element to the dom -> otherwise it will not work in firefox
+           				a.click();    
+            				a.remove();  //afterwards we remove the element again 
+				});
+			}
+		}
+		function redirect() {
+			window.location.href = "upload.html";
+		}
+	</script>
+	<div class="topnav">
+ 		<a class="active">My Uploads</a>
+	</div>
+	<h1>All public files:<ul id="public"> </div></h1>
+	<h1>All private files:<ul id="private"> </div></h1>
+	<button onclick="redirect();">Upload files!</button>
+	<div class="footer">
+		<center>
+			<h4>© Copyrights reserved.</h4>
+		</center>
+	</div>
+</body>
+</html>

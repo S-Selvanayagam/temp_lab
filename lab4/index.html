@@ -1,0 +1,27 @@
+<html>
+<head>
+	<title>Hits Counter</title>
+</head>
+
+<body>
+	<h2>Number of visits:</h2>
+	<div id="cnt" />
+	<script>
+		document.addEventListener("DOMContentLoaded", getCount());
+		function getCount() {
+			// const data = await fetch("http://localhost:8000/", {method: "GET", mode: "no-cors"});
+			// return data.json();
+			const a = localStorage.getItem("count");
+			console.log(a);
+			if (a === null) {
+				localStorage.setItem("count", 1);
+			} else {
+				localStorage.setItem("count", eval(a)+1);
+			}
+			const elem = document.getElementById("cnt");
+			elem.innerHTML = localStorage.getItem("count");
+		}
+	</script>
+</body>
+
+</html>

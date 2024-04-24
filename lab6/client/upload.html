@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="landing.css" />
+    <style>
+	.footer {
+		position: absolute;
+		font-family: Verdana;
+		background-color: #000;
+		color: white;
+		bottom: 0;
+		width: 99.1vw;
+	}
+    </style>	
+    <title>My Uploads</title>
+</head>
+<body>	
+	<script>
+		function private() {
+			const token = localStorage.getItem("token");
+			console.log(token);
+
+			const uploadedFile = document.getElementById("up-file").files[0];
+			const formData = new FormData();
+			formData.append('file', uploadedFile);
+			console.log(formData);
+			fetch("http://localhost:8081/private_upload", {
+  				method: "POST",
+  				headers: {
+					"Authorization" : `Bearer ${token}`
+  				},
+				body: formData
+			}).then(response => response.json()).then(data => {
+				console.log(data);
+			});
+		}
+		function public() {
+			const uploadedFile = document.getElementById("up-file").files[0];
+			const formData = new FormData();
+			formData.append('file', uploadedFile);
+			console.log(formData);
+			fetch("http://localhost:8081/public_upload", {
+  				method: "POST",
+				body: formData
+			}).then(response => response.json()).then(data => {
+				console.log(data);
+			});
+		}
+		function redirect() {
+			window.location.href = "upload.html";
+		}
+	</script>
+	<div class="topnav">
+ 		<a class="active">My Uploads</a>
+	</div>	
+	<input id="up-file" type="file" />
+	<button onclick="private();">Upload privately!</button>
+	<button onclick="public();">Upload publicly!</button>
+	<div class="footer">
+		<center>
+			<h4>© Copyrights reserved.</h4>
+		</center>
+	</div>
+</body>
+</html>
